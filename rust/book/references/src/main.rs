@@ -24,11 +24,11 @@ fn change_string(my_string: &mut String) {
 
 fn example() {
     let mut a = String::from("this");
-    // okay to have multiple inmutable references at the same time
+    // okay to have multiple immutable references at the same time
     let b = &a;
     let c = &a;
 
-    // only okay to have a mutable reference since inmutable ones are no longer used
+    // only okay to have a mutable reference since immutable ones are no longer used
     let d = &mut a;
     d.push_str(" and that");
     println!("{}", d);
