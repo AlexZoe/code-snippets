@@ -1,0 +1,17 @@
+[package]
+name = "build_profiles"
+version = "0.1.0"
+authors = ["Alexander Zoellner <zoellner.contact@gmail.com>"]
+edition = "2018"
+
+# profile for regular build
+[profile.dev]
+opt-level = 0
+
+# profile for build with '--release' flag
+[profile.release]
+opt-level = 3
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
