@@ -17,15 +17,20 @@ impl<T> Node<T> {
 }
 
 struct SingleList<T> {
+    length: usize,
     first: Option<Rc<RefCell<Node<T>>>>,
 }
 
-impl<T> SingleList<T> {
+impl<T:Copy> SingleList<T> {
     fn new() -> Self {
-        Self { first: None }
+        Self {
+            first: None,
+            length: 0
+        }
     }
 
     fn append(&mut self, data: T) {
+        self.length += 1;
         if self.first.is_some() {
             let mut item = self.first.clone();
             while let Some(current) = item {
@@ -38,6 +43,25 @@ impl<T> SingleList<T> {
         } else {
             self.first = Some(Rc::new(RefCell::new(Node::new(data))));
         };
+    }
+
+    fn prepend(&mut self, data: T) {
+        self.length += 1;
+        let prev_first = self.first.clone();
+        self.first = Some(Rc::new(RefCell::new(Node::new(data))));
+        self.first.as_ref().unwrap().borrow_mut().next = prev_first;
+    }
+
+    fn at(&self, idx: usize) -> Option<T> {
+        if self.length > idx {
+            let mut item = self.first.clone();
+            for _ in 0..idx {
+                item = item.unwrap().borrow().next.clone();
+            }
+            return Some(item.unwrap().borrow().data)
+        } else {
+            None
+        }
     }
 }
 
@@ -56,11 +80,12 @@ impl<T: fmt::Display> fmt::Display for SingleList<T> {
     }
 }
 
-
 fn main() {
     let mut my_list = SingleList::<u32>::new();
     my_list.append(3);
     my_list.append(2);
     my_list.append(8);
+    my_list.prepend(1);
     println!("{}", my_list);
+    println!("val at {}: {}", 2, my_list.at(2).unwrap());
 }
