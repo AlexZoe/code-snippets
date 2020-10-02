@@ -63,6 +63,24 @@ impl<T:Copy> SingleList<T> {
             None
         }
     }
+
+    fn delete(&mut self, idx: usize) {
+        if self.length > idx {
+            self.length -= 1;
+            if idx == 0 {
+                let item = self.first.as_ref().unwrap().borrow().next.clone();
+                self.first = item;
+            } else {
+                let mut item = self.first.clone();
+                let mut delete_candidate = self.first.as_ref().unwrap().borrow().next.clone();
+                for _ in 0..idx-1 {
+                    item = item.unwrap().borrow().next.clone();
+                    delete_candidate = delete_candidate.unwrap().borrow().next.clone();
+                }
+                item.unwrap().borrow_mut().next = delete_candidate.unwrap().borrow().next.clone();
+            }
+        }
+    }
 }
 
 impl<T: fmt::Display> fmt::Display for SingleList<T> {
@@ -84,8 +102,11 @@ fn main() {
     let mut my_list = SingleList::<u32>::new();
     my_list.append(3);
     my_list.append(2);
+    my_list.delete(0);
     my_list.append(8);
     my_list.prepend(1);
+    my_list.delete(1);
+    my_list.append(7);
     println!("{}", my_list);
     println!("val at {}: {}", 2, my_list.at(2).unwrap());
 }
