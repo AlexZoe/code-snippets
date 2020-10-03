@@ -81,6 +81,10 @@ impl<T:Copy> SingleList<T> {
             }
         }
     }
+
+    fn length(&self) -> &usize {
+        &self.length
+    }
 }
 
 impl<T: fmt::Display> fmt::Display for SingleList<T> {
@@ -98,6 +102,34 @@ impl<T: fmt::Display> fmt::Display for SingleList<T> {
     }
 }
 
+impl<T:Copy> IntoIterator for SingleList<T> {
+    type Item = T;
+    type IntoIter = SingleListIteratorState<T>;
+    fn into_iter(self) -> SingleListIteratorState<T> {
+        SingleListIteratorState{
+            next: self.first
+        }
+    }
+}
+
+struct SingleListIteratorState<T> {
+    next: Option<Rc<RefCell<Node<T>>>>,
+}
+
+impl<T:Copy> Iterator for SingleListIteratorState<T> {
+    type Item = T;
+    fn next(&mut self) -> Option<T> {
+        if self.next.is_some() {
+            let ret = Some(self.next.as_ref().unwrap().borrow().data);
+            let tmp = self.next.as_ref().unwrap().borrow().next.clone();
+            self.next = tmp;
+            ret
+        } else {
+            None
+        }
+    }
+}
+
 fn main() {
     let mut my_list = SingleList::<u32>::new();
     my_list.append(3);
@@ -107,6 +139,11 @@ fn main() {
     my_list.prepend(1);
     my_list.delete(1);
     my_list.append(7);
+    println!("list has {} elements", my_list.length());
     println!("{}", my_list);
     println!("val at {}: {}", 2, my_list.at(2).unwrap());
+
+    for i in my_list {
+        println!("{}, ", i);
+    }
 }
