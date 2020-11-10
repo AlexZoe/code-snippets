@@ -32,8 +32,7 @@ fn get_max_depth(input: &String) -> Option<i32> {
 
 
 fn get_max_depth_compact(input: &String) -> Option<i32> {
-    let mut copy = input.clone();
-    copy.chars()
+    input.chars()
         .filter(|&x| "()".contains(x))
         .map(|x| if let '(' = x { 1 } else {-1})
         .scan(0, |acc, x| { *acc += x; Some(*acc) })
