@@ -13,18 +13,16 @@ def get_arguments():
 def find_unique_with_hash(input_str: str):
     char_dict: dict = {}
 
-    pos = 0
-    for char in input_str:
+    for pos, char in enumerate(input_str):
         if char in char_dict:
             char_dict[char][1] += 1
         else:
             char_dict[char] = [pos, 1]
-        pos += 1
 
-    for idx, ch in enumerate(char_dict):
-        if char_dict[ch][1] == 1:
-            print("Found at {}: {}".format(char_dict[ch][0], ch))
-            return char_dict[ch][0]
+    for ch, info in char_dict.items():
+        if info[1] == 1:
+            print("Found at {}: {}".format(info[0], ch))
+            return info[0]
     print("No unique character")
     return -1
 
@@ -41,9 +39,9 @@ def find_unique_with_array(input_str: str):
             char_array[a_idx] = idx + 1
 
     min_val = 0x7fffffff
-    for idx in char_array:
-        if char_array[idx] > 0:
-            min_val = min(char_array[idx] - 1, min_val)
+    for idx, count in enumerate(char_array):
+        if count > 0:
+            min_val = min(count - 1, min_val)
 
     return min_val if min_val != 0x7fffffff else -1
 
