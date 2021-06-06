@@ -11,10 +11,18 @@ struct Node<T> {
 }
 
 
+impl <T: std::fmt::Display> std::fmt::Display for Node<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.val)
+    }
+}
+
+
 pub struct BTree<T> {
     size: usize,
     root: Option<Rc<RefCell<Node<T>>>>,
 }
+
 
 fn create_node<T>(val: T, parent: Option<Weak<RefCell<Node<T>>>>) -> Option<Rc<RefCell<Node<T>>>> {
     Some(Rc::new(RefCell::new(Node {
@@ -25,7 +33,8 @@ fn create_node<T>(val: T, parent: Option<Weak<RefCell<Node<T>>>>) -> Option<Rc<R
     })))
 }
 
-impl<T: std::cmp::PartialOrd> BTree<T> {
+
+impl<T: std::cmp::PartialOrd + std::fmt::Display> BTree<T> {
     fn new() -> Self {
         Self {
             root: None,
@@ -68,6 +77,26 @@ impl<T: std::cmp::PartialOrd> BTree<T> {
             self.size += 1;
         }
     }
+
+    fn print_subtree(&self, node: &Option<Rc<RefCell<Node<T>>>>, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        if node.is_some() {
+            if node.as_ref().unwrap().borrow().left.is_some() {
+                self.print_subtree(&node.as_ref().unwrap().borrow().left, f)?;
+            }
+            write!(f, "{}, ", node.as_ref().unwrap().borrow().val)?;
+            if node.as_ref().unwrap().borrow().right.is_some() {
+                self.print_subtree(&node.as_ref().unwrap().borrow().right, f)?;
+            }
+        }
+        Ok(())
+    }
+}
+
+
+impl <T: std::cmp::PartialOrd + std::fmt::Display> std::fmt::Display for BTree<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        self.print_subtree(&self.root, f)
+    }
 }
 
 
@@ -85,14 +114,25 @@ mod tests {
     fn add_item() {
         let mut bt = BTree::<u32>::new();
         bt.add(random());
-        assert!(bt.size() > 0)
+        assert!(bt.size() > 0);
     }
 
     #[test]
-    fn add_two_item() {
+    fn add_two_items() {
         let mut bt = BTree::<u32>::new();
         bt.add(random());
         bt.add(random());
-        assert!(bt.size() > 1)
+        assert!(bt.size() > 1);
+    }
+
+    #[test]
+    fn print_tree() {
+        println!("hi");
+        let mut bt = BTree::<u32>::new();
+        for _ in 0..((random::<usize>() % 10) + 3) {
+            bt.add(random::<u32>() % 100);
+        }
+        println!("tree: {}", bt);
+        assert!(bt.size() > 1);
     }
 }
