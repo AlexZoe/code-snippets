@@ -78,6 +78,20 @@ impl<T: std::cmp::PartialOrd + std::fmt::Display> BTree<T> {
         }
     }
 
+    fn search(&self, val: T) -> bool {
+        let mut current_node = self.root.clone();
+        while current_node.is_some() {
+            if current_node.as_ref().unwrap().borrow_mut().val == val {
+                return true;
+            } else if val < current_node.as_ref().unwrap().borrow_mut().val {
+                current_node = current_node.unwrap().borrow_mut().left.clone();
+            } else {
+                current_node = current_node.unwrap().borrow_mut().right.clone();
+            }
+        }
+        false
+    }
+
     fn print_subtree(&self, node: &Option<Rc<RefCell<Node<T>>>>, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         if node.is_some() {
             if node.as_ref().unwrap().borrow().left.is_some() {
@@ -127,12 +141,30 @@ mod tests {
 
     #[test]
     fn print_tree() {
-        println!("hi");
         let mut bt = BTree::<u32>::new();
         for _ in 0..((random::<usize>() % 10) + 3) {
             bt.add(random::<u32>() % 100);
         }
         println!("tree: {}", bt);
         assert!(bt.size() > 1);
+    }
+
+    #[test]
+    fn search_hit() {
+        let mut bt = BTree::<u32>::new();
+        for _ in 0..((random::<usize>() % 10) + 3) {
+            bt.add(random::<u32>() % 100);
+        }
+        bt.add(3);
+        assert!(bt.search(3));
+    }
+
+    #[test]
+    fn search_miss() {
+        let mut bt = BTree::<u32>::new();
+        for _ in 0..((random::<usize>() % 10) + 3) {
+            bt.add(random::<u32>() % 100);
+        }
+        assert!(!bt.search(15));
     }
 }
