@@ -11,7 +11,8 @@ struct Node<T> {
 }
 
 
-impl <T: std::fmt::Display> std::fmt::Display for Node<T> {
+impl <T> std::fmt::Display for Node<T>
+    where T: std::fmt::Display {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.val)
     }
@@ -34,7 +35,9 @@ fn create_node<T>(val: T, parent: Option<Weak<RefCell<Node<T>>>>) -> Option<Rc<R
 }
 
 
-impl<T: std::cmp::PartialOrd + std::fmt::Display> BTree<T> {
+impl<T> BTree<T>
+    where T: std::cmp::PartialOrd + std::fmt::Display {
+
     fn new() -> Self {
         Self {
             root: None,
@@ -70,7 +73,6 @@ impl<T: std::cmp::PartialOrd + std::fmt::Display> BTree<T> {
                         current_node = current_node.unwrap().borrow_mut().right.clone();
                     }
                 } else {
-                    current_node.as_ref().unwrap().borrow_mut().val = val;
                     return;
                 }
             }
