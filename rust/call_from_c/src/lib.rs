@@ -1,16 +1,38 @@
 #[no_mangle]
-pub extern "C" fn print_string_with_string(string: *mut u8, size: i32) {
+pub extern "C" fn print_string_with_string(string: *const u8, size: i32) {
     /*
     This won't work since String seems to take ownership of data pointed by 'string' and
-    subsequently tries to free the data. If 'string' is stack allocated this will lead to
+    subsequently tries to free the data with drop(). If 'string' is stack allocated this will lead to
     double free. For heap allocated data, the C part can skip freeing the memory to prevent
     the program from exiting with an error.
     In either case, Rust seems not be able to successfully free the memory since
-    allocation-free part won't match.
+    C's allocation does not seem to match the free part of Rust.
     */
-    let r_string = unsafe { String::from_raw_parts(string, size as usize, size as usize) };
+//    let r_string = unsafe { String::from_raw_parts(string, size as usize, size as usize) };
 
-    println!("{}", r_string);
+//    println!("{}", r_string);
+
+
+    /*
+    Using string slice is fine since it won't take ownership of the data.
+    Additionally, we can use a const u8 pointer instead of declaring it as mut, which is required by the String
+    version.
+     */
+
+    // Try to catch null pointers
+    if string as usize == 0 {
+        eprintln!("Null pointer detected");
+        return;
+    }
+
+    // Handle panics due to size being wrong
+    // Note: Rust thinks the string is 1 byte longer than what C reports for sizeof()
+    let result = std::panic::catch_unwind ( || {
+        let str_ref: &str = unsafe { std::str::from_utf8(&*std::ptr::slice_from_raw_parts(string, size as usize)).unwrap() };
+        println!("{}", str_ref); });
+    if result.is_err() {
+        eprintln!("Panick from rust");
+    }
 }
 
 #[no_mangle]

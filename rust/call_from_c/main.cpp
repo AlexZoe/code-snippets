@@ -9,6 +9,16 @@ void print_string_v1() {
     print_string_with_string(c, sizeof(c));
 }
 
+void print_string_null_ptr() {
+    print_string_with_string(NULL, 2);
+}
+
+void print_string_out_of_bounds() {
+    char c[] = "hello rust\0";
+    printf("C thinks string lengths is %li\n", sizeof(c));
+    print_string_with_string(c, sizeof(c)+2);
+}
+
 void print_string_v2() {
     char c[] = "hello rust\0";
     print_string_with_u8(c, sizeof(c));
@@ -34,7 +44,9 @@ void call_native() {
 }
 
 int main() {
-//    print_string_v1();
+    print_string_v1();
+    print_string_out_of_bounds();
+    print_string_null_ptr();
 //    print_string_v2();
 //    call_native();
 //    print_float_v1();
