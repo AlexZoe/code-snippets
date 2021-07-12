@@ -33,17 +33,15 @@ where T: Copy {
     }
 
     pub fn top(&self) -> Option<T> {
-        if self.root.is_some() {
-            return Some(self.root.clone().unwrap().borrow().val);
-        } else {
-            return None
-        }
+        match &self.root {
+            None => return None,
+            Some(root) => return Some(root.borrow().val),
+        };
     }
 
     pub fn pop(&mut self) {
-        if self.root.is_some() {
-            let tmp = self.root.as_ref().unwrap().borrow().next.clone();
-            self.root = tmp;
+        if let Some(old_root) = self.root.clone() {
+            self.root = old_root.borrow().next.clone();
             self.size -= 1;
         }
     }
