@@ -1,8 +1,8 @@
-TARGETS := stack
+TARGETS := stack queue
 
 all: $(TARGETS)
 
-stack:
+$^:
 	@g++ -o $@ $@.cpp
 
 clean:
