@@ -51,6 +51,7 @@ fn main() {
         .about("ZeroMQ Publisher")
         .arg(
             clap::Arg::with_name("socket")
+                .long("socket")
                 .value_name("SOCKET")
                 .help("Sets ZeroMQ socket name")
                 .default_value("ipc:///tmp/sensor_rep")
