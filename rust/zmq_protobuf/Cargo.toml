@@ -13,3 +13,7 @@ protobuf = "2.25.1"
 [[bin]]
 name = "zmq_pub"
 path = "src/zmq_pub.rs"
+
+[[bin]]
+name = "zmq_sub"
+path = "src/zmq_sub.rs"
