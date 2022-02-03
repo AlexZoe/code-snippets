@@ -1,3 +1,5 @@
+pub mod env {
+
 use once_cell::sync::OnceCell;
 use signal_hook::{consts::SIGINT, iterator::Signals};
 use std::{
@@ -5,6 +7,7 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
     thread,
 };
+
 
 pub struct Environment {
     running: AtomicBool,
@@ -36,3 +39,5 @@ static ENV: Environment = Environment {
     running: AtomicBool::new(false),
     listener: OnceCell::new(),
 };
+
+}

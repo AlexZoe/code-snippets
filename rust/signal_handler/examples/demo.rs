@@ -1,6 +1,6 @@
 use std::{thread, time::Duration};
 
-mod env;
+use signal_handler::env;
 
 fn main() {
     if let Err(_) = env::Environment::init() {
