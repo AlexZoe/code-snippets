@@ -1,0 +1,7 @@
+:load name          load script name
+:reload
+:set editor name    set editor to name
+:edit name          edit script name
+:edit               edit current script
+:type expr          show type of expr
+:?                  show all cmds
