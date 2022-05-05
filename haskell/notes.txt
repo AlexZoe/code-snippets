@@ -1,0 +1,4 @@
+type classes:
+Num     (Numeric types)
+Eq      (Equality types)
+Ord     (Ordered types)
