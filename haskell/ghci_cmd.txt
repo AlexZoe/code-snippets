@@ -5,3 +5,5 @@
 :edit               edit current script
 :type expr          show type of expr
 :?                  show all cmds
+:set editor <editor>    set editor
+:set +s             set statistics

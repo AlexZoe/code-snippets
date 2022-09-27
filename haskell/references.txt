@@ -1,0 +1,7 @@
+University of Nottingham (Graham Hutton)
+https://www.cs.nott.ac.uk/~pszgmh/pgp.html
+
+University of Pennsylvania (CIS 194)
+https://www.seas.upenn.edu/~cis194/spring13/lectures.html
+
+https://stackoverflow.com/questions/1012573/getting-started-with-haskell?rq=1
