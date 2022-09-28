@@ -44,8 +44,11 @@ void init(int argc, char** argv, struct UserCmdOptions* user_options,
     {
         user_flags = user_options->flags;
         // Cut off arguments that would exceed the maximum number of entries
-        num_user_args =
-                user_options->num_arg_entries % (MAX_ENTRIES - num_shared_args);
+        num_user_args = user_options->num_arg_entries;
+        if (num_user_args + num_shared_args > MAX_ENTRIES)
+        {
+            num_user_args = MAX_ENTRIES - num_shared_args;
+        }
     }
 
     // Short commandline arguments to look for, e.g. '-h'
