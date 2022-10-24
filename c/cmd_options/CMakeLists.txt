@@ -1,9 +1,18 @@
-project(cmd_options)
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 2.8)
 
-file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/*.c)
-include_directories(${CMAKE_SOURCE_DIR}/)
+project(program-options)
 
-add_executable(prog
-    ${SOURCES}
+set(MAJOR 1)
+set(MINOR 0)
+set(REV 0)
+
+include_directories(program-options include)
+
+add_library(program-options STATIC src/program_options.c)
+target_compile_definitions(program-options PRIVATE VERSION="${MAJOR}.${MINOR}.${REV}")
+
+add_executable(main main.c)
+target_link_libraries(main
+    program-options
 )
+include_directories(include)
