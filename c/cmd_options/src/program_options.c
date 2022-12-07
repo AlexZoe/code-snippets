@@ -231,7 +231,7 @@ static void string_param_setter(char* optarg, void* param, int param_len)
 {
     if (optarg)
     {
-        memcpy(param, optarg, param_len);
+        snprintf(param, param_len, "%s", optarg);
     }
 }
 

@@ -244,7 +244,7 @@ TEST(ProgOption, cut_off_when_argument_is_too_long)
     parse_program_options(argc, argv);
 
     // Artificially cut off input string
-    very_long_path[sizeof(file_path) / 2] = '\0';
+    very_long_path[(sizeof(file_path) / 2) - 1] = '\0';
     EXPECT_STREQ(very_long_path, file_path);
 }
 
