@@ -1,7 +1,3 @@
-use std::collections::BinaryHeap;
-use std::fs::File;
-use std::io::Read;
-
 pub struct CalorieSummer<'a> {
     input: std::str::Lines<'a>,
 }
@@ -34,27 +30,15 @@ impl<'a> Iterator for CalorieSummer<'a> {
     }
 }
 
-pub fn get_string_from_file(file: &str) -> String {
-    let mut s = String::new();
-    let _ = match File::open(file) {
-        Ok(mut f) => f.read_to_string(&mut s),
-        _ => Ok(0),
-    };
-    s
-}
-
 #[cfg(test)]
 mod tests {
+    use super::super::file;
     use super::*;
+    use std::collections::BinaryHeap;
 
     #[test]
     fn empty_string_for_non_existing_file() {
-        assert_eq!(String::from(""), get_string_from_file(""));
-    }
-
-    #[test]
-    fn highest_is_0_for_empty_string() {
-        assert_eq!(0, find_hightest_cals_of_elf(""));
+        assert_eq!(String::from(""), file::get_string_from_file(""));
     }
 
     #[test]
@@ -65,8 +49,8 @@ mod tests {
 
     #[test]
     fn return_highest_sum_in_list() {
-        let string = get_string_from_file("assets/day1_sample.txt");
-        let mut summer = CalorieSummer::new(&string);
+        let string = file::get_string_from_file("assets/day1_sample.txt");
+        let summer = CalorieSummer::new(&string);
         let map: BinaryHeap<u64> = summer.collect();
 
         assert_eq!(24000, *map.peek().unwrap());
