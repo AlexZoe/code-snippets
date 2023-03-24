@@ -1,5 +1,6 @@
 mod day1;
 mod day2;
+mod day3;
 mod file;
 
 use std::collections::BinaryHeap;
@@ -31,10 +32,28 @@ fn day2_part_two() {
     println!("score for updated rule is: {}", sum);
 }
 
+fn day3_part_one() {
+    let string = file::get_string_from_file("assets/day3_real_input.txt");
+    let sum: u64 = day3::DuplicateItemValueCounter::new(&string).sum();
+    println!("score is: {}", sum);
+}
+
+fn day3_part_two() {
+    let string = file::get_string_from_file("assets/day3_real_input.txt");
+    let sum: u64 = day3::BadgeValueFinder::new(&string).sum();
+    println!("score is: {}", sum);
+}
+
 fn main() {
+    println!("day1");
     day1_part_one();
     day1_part_two();
 
+    println!("\nday2");
     day2_part_one();
     day2_part_two();
+
+    println!("\nday3");
+    day3_part_one();
+    day3_part_two();
 }
