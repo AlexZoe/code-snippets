@@ -1,7 +1,10 @@
 mod day1;
 mod day2;
 mod day3;
+mod day4;
 mod file;
+
+use day4::Overlap;
 
 use std::collections::BinaryHeap;
 
@@ -44,6 +47,22 @@ fn day3_part_two() {
     println!("score is: {}", sum);
 }
 
+fn day4_part_one() {
+    let string = file::get_string_from_file("assets/day4_real_input.txt");
+    println!(
+        "number full overlapping sections: {}",
+        day4::OverlapFinder::new(&string).full_overlap()
+    );
+}
+
+fn day4_part_two() {
+    let string = file::get_string_from_file("assets/day4_real_input.txt");
+    println!(
+        "number partial overlapping sections: {}",
+        day4::OverlapFinder::new(&string).partial_overlap()
+    );
+}
+
 fn main() {
     println!("day1");
     day1_part_one();
@@ -56,4 +75,8 @@ fn main() {
     println!("\nday3");
     day3_part_one();
     day3_part_two();
+
+    println!("\nday4");
+    day4_part_one();
+    day4_part_two();
 }
