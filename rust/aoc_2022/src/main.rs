@@ -2,6 +2,7 @@ mod day1;
 mod day2;
 mod day3;
 mod day4;
+mod day5;
 mod file;
 
 use day4::Overlap;
@@ -63,6 +64,52 @@ fn day4_part_two() {
     );
 }
 
+fn day5_part_one() {
+    let string = file::get_string_from_file("assets/day5_real_input.txt");
+    let instructions = day5::InstructionList::new(&string);
+
+    let mut stack = day5::SupplyStack::new(vec![
+        vec!['W', 'B', 'D', 'N', 'C', 'F', 'J'],
+        vec!['P', 'Z', 'V', 'Q', 'L', 'S', 'T'],
+        vec!['P', 'Z', 'B', 'G', 'J', 'T'],
+        vec!['D', 'T', 'L', 'J', 'Z', 'B', 'H', 'C'],
+        vec!['G', 'V', 'B', 'J', 'S'],
+        vec!['P', 'S', 'Q'],
+        vec!['B', 'V', 'D', 'F', 'L', 'M', 'P', 'N'],
+        vec!['P', 'S', 'M', 'F', 'B', 'D', 'L', 'R'],
+        vec!['V', 'D', 'T', 'R'],
+    ]);
+
+    stack.apply_instructions(instructions);
+    println!(
+        "top of stack is: {}",
+        stack.get_top().iter().cloned().collect::<String>()
+    );
+}
+
+fn day5_part_two() {
+    let string = file::get_string_from_file("assets/day5_real_input.txt");
+    let instructions = day5::InstructionList::new(&string);
+
+    let mut stack = day5::SupplyStack::new(vec![
+        vec!['W', 'B', 'D', 'N', 'C', 'F', 'J'],
+        vec!['P', 'Z', 'V', 'Q', 'L', 'S', 'T'],
+        vec!['P', 'Z', 'B', 'G', 'J', 'T'],
+        vec!['D', 'T', 'L', 'J', 'Z', 'B', 'H', 'C'],
+        vec!['G', 'V', 'B', 'J', 'S'],
+        vec!['P', 'S', 'Q'],
+        vec!['B', 'V', 'D', 'F', 'L', 'M', 'P', 'N'],
+        vec!['P', 'S', 'M', 'F', 'B', 'D', 'L', 'R'],
+        vec!['V', 'D', 'T', 'R'],
+    ]);
+
+    stack.apply_instructions_bulk(instructions);
+    println!(
+        "top of stack is: {}",
+        stack.get_top().iter().cloned().collect::<String>()
+    );
+}
+
 fn main() {
     println!("day1");
     day1_part_one();
@@ -79,4 +126,8 @@ fn main() {
     println!("\nday4");
     day4_part_one();
     day4_part_two();
+
+    println!("\nday5");
+    day5_part_one();
+    day5_part_two();
 }
