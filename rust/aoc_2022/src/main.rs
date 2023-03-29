@@ -3,6 +3,7 @@ mod day2;
 mod day3;
 mod day4;
 mod day5;
+mod day6;
 mod file;
 
 use day4::Overlap;
@@ -110,6 +111,22 @@ fn day5_part_two() {
     );
 }
 
+fn day6_part_one() {
+    let string = file::get_string_from_file("assets/day6_real_input.txt");
+    println!(
+        "start position is: {}",
+        day6::find_start_of_sequence_position(&string, 4).unwrap()
+    );
+}
+
+fn day6_part_two() {
+    let string = file::get_string_from_file("assets/day6_real_input.txt");
+    println!(
+        "start position is: {}",
+        day6::find_start_of_sequence_position(&string, 14).unwrap()
+    );
+}
+
 fn main() {
     println!("day1");
     day1_part_one();
@@ -130,4 +147,8 @@ fn main() {
     println!("\nday5");
     day5_part_one();
     day5_part_two();
+
+    println!("\nday6");
+    day6_part_one();
+    day6_part_two();
 }
