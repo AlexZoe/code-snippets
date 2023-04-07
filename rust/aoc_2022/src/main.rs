@@ -4,6 +4,7 @@ mod day3;
 mod day4;
 mod day5;
 mod day6;
+mod day7;
 mod file;
 
 use day4::Overlap;
@@ -127,6 +128,33 @@ fn day6_part_two() {
     );
 }
 
+fn day7_part_one() {
+    let string = file::get_string_from_file("assets/day7_real_input.txt");
+    let fs = day7::FileSystem::new(&string);
+    let mut sorted: Vec<usize> = fs.dir_size_list();
+    sorted.sort();
+
+    let max: usize = 100_000;
+    println!(
+        "size is: {}",
+        sorted.iter().take_while(|x| **x <= max).sum::<usize>()
+    );
+}
+
+fn day7_part_two() {
+    let string = file::get_string_from_file("assets/day7_real_input.txt");
+    let fs = day7::FileSystem::new(&string);
+    let mut sorted: Vec<usize> = fs.dir_size_list();
+    sorted.sort();
+    let root_size = sorted.iter().rev().take(1).next().unwrap();
+    let min_size = 30_000_000 - (70_000_000 - root_size);
+
+    println!(
+        "size is: {}",
+        sorted.iter().filter(|x| **x >= min_size).next().unwrap()
+    );
+}
+
 fn main() {
     println!("day1");
     day1_part_one();
@@ -151,4 +179,8 @@ fn main() {
     println!("\nday6");
     day6_part_one();
     day6_part_two();
+
+    println!("\nday7");
+    day7_part_one();
+    day7_part_two();
 }
