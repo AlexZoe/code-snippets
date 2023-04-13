@@ -5,6 +5,7 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
 mod file;
 
 use day4::Overlap;
@@ -155,6 +156,22 @@ fn day7_part_two() {
     );
 }
 
+fn day8_part_one() {
+    let string = file::get_string_from_file("assets/day8_real_input.txt");
+    println!(
+        "visible fields: {}",
+        day8::Grid::new(&string).count_visible()
+    );
+}
+
+fn day8_part_two() {
+    let string = file::get_string_from_file("assets/day8_real_input.txt");
+    println!(
+        "scenic score: {}",
+        day8::Grid::new(&string).highest_scenic_view_score()
+    );
+}
+
 fn main() {
     println!("day1");
     day1_part_one();
@@ -183,4 +200,8 @@ fn main() {
     println!("\nday7");
     day7_part_one();
     day7_part_two();
+
+    println!("\nday8");
+    day8_part_one();
+    day8_part_two();
 }
