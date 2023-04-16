@@ -1,4 +1,5 @@
 mod day1;
+mod day10;
 mod day2;
 mod day3;
 mod day4;
@@ -197,6 +198,38 @@ fn day9_part_two() {
     println!("visited places: {}", rope_bridge.visited_places());
 }
 
+fn day10_part_one() {
+    let instructions = day10::parse_instructions(
+        file::get_string_from_file("assets/day10_real_input.txt").as_str(),
+    );
+    let mut state = day10::ProcessorState::new();
+
+    for instr in instructions {
+        state.execute(instr);
+    }
+
+    let mut score = 0;
+
+    for cycle in (20..260).step_by(40) {
+        let tmp = state.get_reg_value_at_cycle(cycle);
+        score += tmp * cycle as i64;
+    }
+    println!("score is: {}", score);
+}
+
+fn day10_part_two() {
+    let instructions = day10::parse_instructions(
+        file::get_string_from_file("assets/day10_real_input.txt").as_str(),
+    );
+    let mut state = day10::ProcessorState::new();
+
+    for instr in instructions {
+        state.execute(instr);
+    }
+
+    state.draw_crt();
+}
+
 fn main() {
     println!("day1");
     day1_part_one();
@@ -233,4 +266,8 @@ fn main() {
     println!("\nday9");
     day9_part_one();
     day9_part_two();
+
+    println!("\nday10");
+    day10_part_one();
+    day10_part_two();
 }
