@@ -6,6 +6,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 mod file;
 
 use day4::Overlap;
@@ -172,6 +173,30 @@ fn day8_part_two() {
     );
 }
 
+fn day9_part_one() {
+    let instructions = day9::parse_walk_instructions(
+        file::get_string_from_file("assets/day9_real_input.txt").as_str(),
+    );
+    let mut rope_bridge = day9::RopeBridge::new(1);
+
+    for inst in instructions {
+        rope_bridge.walk(inst);
+    }
+    println!("visited places: {}", rope_bridge.visited_places());
+}
+
+fn day9_part_two() {
+    let instructions = day9::parse_walk_instructions(
+        file::get_string_from_file("assets/day9_real_input.txt").as_str(),
+    );
+    let mut rope_bridge = day9::RopeBridge::new(9);
+
+    for inst in instructions {
+        rope_bridge.walk(inst);
+    }
+    println!("visited places: {}", rope_bridge.visited_places());
+}
+
 fn main() {
     println!("day1");
     day1_part_one();
@@ -204,4 +229,8 @@ fn main() {
     println!("\nday8");
     day8_part_one();
     day8_part_two();
+
+    println!("\nday9");
+    day9_part_one();
+    day9_part_two();
 }
