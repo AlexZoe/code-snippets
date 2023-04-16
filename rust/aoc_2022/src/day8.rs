@@ -112,6 +112,7 @@ impl Grid {
         grid
     }
 
+    #[allow(dead_code)]
     pub fn print(&self) {
         println!("matrix is {}", self.data);
     }

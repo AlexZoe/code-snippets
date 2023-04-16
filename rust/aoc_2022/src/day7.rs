@@ -96,11 +96,13 @@ impl FileSystem {
         fs
     }
 
+    #[allow(dead_code)]
     pub fn print_layout(&self) {
         println!("- {}", self.root.borrow().name);
         print_internal(self.root.borrow().entries.as_ref().unwrap(), 0);
     }
 
+    #[allow(dead_code)]
     pub fn print_dir_sizes(&self) {
         println!("sizes: {:?}", self.dir_size_list);
     }
