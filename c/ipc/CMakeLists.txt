@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 
 project(nng_ipc)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -Wall -g -Werror -fsanitize=address")
+
 # Check own repository URL
 execute_process (
   OUTPUT_VARIABLE var
@@ -59,15 +62,22 @@ endif ()
 
 include_directories(${CMAKE_SOURCE_DIR}/nng/include)
 
+add_library(heartbeat heartbeat.c)
+target_link_libraries(heartbeat
+    ${CMAKE_BINARY_DIR}/nng-build/libnng.a
+    pthread
+    )
+
 add_executable(publisher publisher.c)
 target_link_libraries(publisher
     ${CMAKE_BINARY_DIR}/nng-build/libnng.a
     pthread
+    heartbeat
 )
 
 add_executable(listener listener.c)
 target_link_libraries(listener
     ${CMAKE_BINARY_DIR}/nng-build/libnng.a
     pthread
+    heartbeat
 )
-
