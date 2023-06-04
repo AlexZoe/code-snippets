@@ -5,10 +5,12 @@
 #include "heartbeat.h"
 
 int main() {
-  HeartbeatPub* sub = create_publisher(PPS_1HZ);
+  HeartbeatPub* pub = create_publisher(PPS_1HZ);
+
+  if (!pub) return 1;
 
   while (1) {
-    publish(sub);
+    publish(pub);
     sleep(1);
   }
 

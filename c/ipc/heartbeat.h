@@ -4,7 +4,7 @@
 #include <time.h>
 
 typedef enum {
-  PPS_1HZ,
+  PPS_1HZ = 0,
   PPS_4HZ,
 } HeartbeatTopic;
 

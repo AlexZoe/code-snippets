@@ -9,9 +9,22 @@
 #include <string.h>
 #include <time.h>
 
-// Have to use same size
+// Have to use same length
 static const char PPS_1HZ_TOPIC[] = "PPS1";
 static const char PPS_4HZ_TOPIC[] = "PPS4";
+
+static const int PPS1_TIMEOUT_MS = 1200;
+static const int PPS4_TIMEOUT_MS = 300;
+
+typedef struct {
+  const char* topic_id;
+  const int timeout;
+} TopicType;
+
+TopicType types[] = {
+    {PPS_1HZ_TOPIC, PPS1_TIMEOUT_MS},
+    {PPS_4HZ_TOPIC, PPS4_TIMEOUT_MS},
+};
 
 static const int PAYLOAD_INDEX = sizeof(PPS_1HZ_TOPIC) - 1;
 
@@ -20,22 +33,24 @@ struct HeartbeatConnection {
   char message[sizeof(PPS_1HZ_TOPIC) - 1 + sizeof(struct timespec)];
 };
 
-static const char* get_topic_id(HeartbeatTopic topic) {
+static TopicType* get_topic(HeartbeatTopic topic) {
   switch (topic) {
     case PPS_1HZ:
-      return PPS_1HZ_TOPIC;
+      return &types[topic];
     case PPS_4HZ:
-      return PPS_4HZ_TOPIC;
+      return &types[topic];
   }
 
   return NULL;
 }
 
 HeartbeatPub* create_publisher(HeartbeatTopic topic) {
-  const char* topic_id = get_topic_id(topic);
+  TopicType* topic_type = get_topic(topic);
+
+  if (!topic_type) return NULL;
 
   HeartbeatPub* pub = malloc(sizeof(HeartbeatPub));
-  snprintf(pub->message, sizeof(pub->message), "%s", topic_id);
+  snprintf(pub->message, sizeof(pub->message), "%s", topic_type->topic_id);
 
   if (nng_pub0_open(&(pub->socket)) != 0) {
     printf("open failed\n");
@@ -43,7 +58,7 @@ HeartbeatPub* create_publisher(HeartbeatTopic topic) {
   }
 
   char ipc_addr[256];
-  snprintf(ipc_addr, sizeof(ipc_addr), "ipc:///tmp/%s.ipc", topic_id);
+  snprintf(ipc_addr, sizeof(ipc_addr), "ipc:///tmp/%s.ipc", topic_type->topic_id);
   if (nng_listen(pub->socket, ipc_addr, NULL, 0) < 0) {
     printf("listen failed\n");
     goto exit_err;
@@ -71,7 +86,9 @@ void publish(HeartbeatPub* publisher) {
 
 HeartbeatSub* create_subscriber(HeartbeatTopic topic) {
   char truncated_string_terminator[PAYLOAD_INDEX];
-  const char* topic_id = get_topic_id(topic);
+  TopicType* topic_type = get_topic(topic);
+
+  if (!topic_type) return NULL;
 
   HeartbeatSub* sub = malloc(sizeof(HeartbeatSub));
 
@@ -80,7 +97,7 @@ HeartbeatSub* create_subscriber(HeartbeatTopic topic) {
     goto exit_err;
   }
 
-  memcpy(&truncated_string_terminator, topic_id,
+  memcpy(&truncated_string_terminator, topic_type->topic_id,
          sizeof(truncated_string_terminator));
 
   // Subscribe topic
@@ -92,13 +109,13 @@ HeartbeatSub* create_subscriber(HeartbeatTopic topic) {
   }
 
   // Set timeout
-  if (nng_socket_set_ms(sub->socket, NNG_OPT_RECVTIMEO, 200) != 0) {
+  if (nng_socket_set_ms(sub->socket, NNG_OPT_RECVTIMEO, topic_type->timeout) != 0) {
     printf("socket set failed\n");
     goto exit_err;
   }
 
   char ipc_addr[256];
-  snprintf(ipc_addr, sizeof(ipc_addr), "ipc:///tmp/%s.ipc", topic_id);
+  snprintf(ipc_addr, sizeof(ipc_addr), "ipc:///tmp/%s.ipc", topic_type->topic_id);
   if (nng_dial(sub->socket, ipc_addr, NULL, NNG_FLAG_NONBLOCK) != 0) {
     printf("dial failed\n");
     goto exit_err;

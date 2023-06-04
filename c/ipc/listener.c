@@ -7,8 +7,11 @@ int main() {
   HeartbeatSub* sub = create_subscriber(PPS_1HZ);
   struct timespec ts;
 
+  if (!sub) return 1;
+
   while (1) {
     HeartbeatResult result = receive(sub, &ts);
+
     if (result == HB_TIMEOUT) {
       printf("timeout\n");
     } else {
