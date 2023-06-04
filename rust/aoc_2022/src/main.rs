@@ -1,5 +1,7 @@
 mod day1;
 mod day10;
+mod day11;
+mod day12;
 mod day2;
 mod day3;
 mod day4;
@@ -12,7 +14,16 @@ mod file;
 
 use day4::Overlap;
 
+use clap::Parser;
 use std::collections::BinaryHeap;
+use std::fs;
+
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct CmdOptions {
+    #[arg(short, long, default_value_t = 1)]
+    day: u8,
+}
 
 fn day1_part_one() {
     let string = file::get_string_from_file("assets/day1_real_input.txt");
@@ -230,44 +241,118 @@ fn day10_part_two() {
     state.draw_crt();
 }
 
+fn day11_part_one() {
+    let input = fs::read_to_string("./assets/day11_real_input.txt").expect("Read input");
+    let mut circus = day11::Circus::new(
+        input.as_str(),
+        Some(day11::StressModifier {
+            op: day11::Operation::Div,
+            constant: Some(3),
+        }),
+    );
+
+    for _ in 0..20 {
+        circus.round();
+    }
+
+    let mut vec: Vec<u64> = circus.get_scores();
+    vec.sort();
+    println!("score: {:?}", vec[vec.len() - 1] * vec[vec.len() - 2]);
+}
+
+fn day11_part_two() {
+    let input = fs::read_to_string("./assets/day11_real_input.txt").expect("Read input");
+    let mut circus = day11::Circus::new(input.as_str(), None);
+
+    for _ in 0..10000 {
+        circus.round();
+    }
+
+    let mut vec: Vec<u64> = circus.get_scores();
+    vec.sort();
+    println!("score: {}", vec[vec.len() - 1] * vec[vec.len() - 2]);
+}
+
+fn day12_part_one() {
+    let input = fs::read_to_string("./assets/day12_real_input.txt").expect("Read ./test_input");
+    let mut map = day12::Map::new(&input);
+    println!("distance: {}", map.search(false).unwrap());
+}
+
+fn day12_part_two() {
+    let input = fs::read_to_string("./assets/day12_real_input.txt").expect("Read ./test_input");
+    let mut map = day12::Map::new(&input);
+    println!(
+        "distance: {}",
+        map.inverse_search_to_elevation(1, false).unwrap()
+    );
+}
+
 fn main() {
-    println!("day1");
-    day1_part_one();
-    day1_part_two();
+    let args = CmdOptions::parse();
 
-    println!("\nday2");
-    day2_part_one();
-    day2_part_two();
+    match args.day {
+        1 => {
+            println!("day1");
+            day1_part_one();
+            day1_part_two();
+        }
+        2 => {
+            println!("\nday2");
+            day2_part_one();
+            day2_part_two();
+        }
+        3 => {
+            println!("\nday3");
+            day3_part_one();
+            day3_part_two();
+        }
+        4 => {
+            println!("\nday4");
+            day4_part_one();
+            day4_part_two();
+        }
+        5 => {
+            println!("\nday5");
+            day5_part_one();
+            day5_part_two();
+        }
 
-    println!("\nday3");
-    day3_part_one();
-    day3_part_two();
-
-    println!("\nday4");
-    day4_part_one();
-    day4_part_two();
-
-    println!("\nday5");
-    day5_part_one();
-    day5_part_two();
-
-    println!("\nday6");
-    day6_part_one();
-    day6_part_two();
-
-    println!("\nday7");
-    day7_part_one();
-    day7_part_two();
-
-    println!("\nday8");
-    day8_part_one();
-    day8_part_two();
-
-    println!("\nday9");
-    day9_part_one();
-    day9_part_two();
-
-    println!("\nday10");
-    day10_part_one();
-    day10_part_two();
+        6 => {
+            println!("\nday6");
+            day6_part_one();
+            day6_part_two();
+        }
+        7 => {
+            println!("\nday7");
+            day7_part_one();
+            day7_part_two();
+        }
+        8 => {
+            println!("\nday8");
+            day8_part_one();
+            day8_part_two();
+        }
+        9 => {
+            println!("\nday9");
+            day9_part_one();
+            day9_part_two();
+        }
+        10 => {
+            println!("\nday10");
+            day10_part_one();
+            day10_part_two();
+        }
+        11 => {
+            println!("\nday11:");
+            day11_part_one();
+            day11_part_two();
+        }
+        12 => {
+            println!("\nday12:");
+            day12_part_one();
+            day12_part_two();
+        }
+        _ => {}
+    }
 }

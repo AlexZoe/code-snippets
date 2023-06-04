@@ -9,3 +9,5 @@ edition = "2021"
 nalgebra = "*"
 ndarray = "*"
 nom = "7.1"
+colored = "2.0"
+clap = { version = "4", features = ["derive"]}
