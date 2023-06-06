@@ -16,6 +16,9 @@ static const char PPS_4HZ_TOPIC[] = "PPS4";
 static const int PPS1_TIMEOUT_MS = 1200;
 static const int PPS4_TIMEOUT_MS = 300;
 
+// subtract 1 to remove string terminator
+#define MESSAGE_SIZE (sizeof(PPS_1HZ_TOPIC) - 1 + sizeof(struct timespec))
+
 typedef struct {
   const char* topic_id;
   const int timeout;
@@ -30,7 +33,7 @@ static const int PAYLOAD_INDEX = sizeof(PPS_1HZ_TOPIC) - 1;
 
 struct HeartbeatConnection {
   nng_socket socket;
-  char message[sizeof(PPS_1HZ_TOPIC) - 1 + sizeof(struct timespec)];
+  char message[MESSAGE_SIZE];
 };
 
 static TopicType* get_topic(HeartbeatTopic topic) {
@@ -135,7 +138,8 @@ void destroy_subscriber(HeartbeatSub* subscriber) {
 HeartbeatResult receive(HeartbeatSub* subscriber, struct timespec* ts) {
   if (!subscriber || !ts) return HB_BAD_SUB;
 
-  size_t size;
+  // neeed to set size to tell nng how many bytes it is allowed to use at most
+  size_t size = MESSAGE_SIZE;
   int ret = nng_recv(subscriber->socket, subscriber->message, &size, 0);
   if (ret != 0) return HB_TIMEOUT;
 
